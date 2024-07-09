@@ -1,0 +1,243 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "i-flow Any Connect API",
+    "description": "Your i-flow Any Connect Server API allows seamless integration of custom solutions into the i-flow platform, tailored to specific factory needs. The i-flow SDK (Any Connect) supports the integration of unique OT and IT systems, enabling developers to create bespoke connectors and processors. It features a modular architecture with key components like the Any Connect Link and Processor, a central Any Connect Server, and a TypeScript SDK for custom service creation. For more details, visit [i-flow SDK Any Connect Integration](https://i-flow.io/ressources/i-flow-sdk-any-connect-integration-individueller-use-cases/).",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Required Endpoints"
+        ],
+        "summary": "Health Check",
+        "description": "Perform a health check on the i-flow Any Connect Server to ensure it is operational. This endpoint returns the current status of the server, indicating whether it is functioning correctly.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "summary": "Get Services",
+        "description": "Retrieve a detailed list of services available on the Any Connect Server. Each service includes metadata such as the service name, description, endpoint URL, HTTP method, query parameters, and request body structure.",
+        "tags": [
+          "Required Endpoints"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of services.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the service."
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "A description of the service."
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "The URL of the service endpoint."
+                          },
+                          "method": {
+                            "type": "string",
+                            "description": "The HTTP method used by the service."
+                          },
+                          "query": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "string",
+                                    "number"
+                                  ]
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "example": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "body": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "string",
+                                    "number"
+                                  ]
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "example": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/service1": {
+      "get": {
+        "tags": [
+          "Example Service Endpoints"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "summary": "Get Material ID Info",
+        "description": "Get data for Material ID from ERP.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "material_id",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The material id.",
+            "example": "MAT_345634"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "material_id_info": {
+                      "type": "object",
+                      "description": "Information about the material ID"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/service2": {
+      "post": {
+        "summary": "Update Stock",
+        "tags": [
+          "Example Service Endpoints"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "description": "Update stock count of material within ERP.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "new_stock": {
+                    "type": "number",
+                    "description": "The new stock of :material_id",
+                    "example": 125
+                  },
+                  "material_id": {
+                    "type": "string",
+                    "description": "The material id.",
+                    "example": "MAT_345634"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "update_status": {
+                      "type": "string",
+                      "description": "Status of the update"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "tokenAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "token"
+      }
+    }
+  }
+}
